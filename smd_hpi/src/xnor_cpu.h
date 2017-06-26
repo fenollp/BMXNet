@@ -103,15 +103,9 @@ namespace xnor_cpu {
    *
    */
   inline float get_alpha(float* weight, int width, int height, int depth) {
-    float accum = 0.0f;
-    for (int z = 0; z < depth; ++z) {
-      for (int x = 0; x < width; ++x) {
-        for (int y = 0; y < height; ++y) {
-          accum += std::abs(weight[z * (width * height) + x * height + y]);
-        }
-      }
-    }
-    return accum / (float) (width * height * depth);
+    auto whd = w * h * d;
+    auto sum = [](float acc, float a) { return acc + std::abs(a); };
+    return std::accumulate(W, W+whd, 0.0f, sum) / (float) whd;
   }
 
   /**
